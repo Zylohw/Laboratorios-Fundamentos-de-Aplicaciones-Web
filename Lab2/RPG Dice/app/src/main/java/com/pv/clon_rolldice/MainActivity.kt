@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 
 // JetPack Compose Core
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 
 // MaterialUI3
+import androidx.compose.material3.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
@@ -61,152 +63,58 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-// constantes de la app
 
-private const val TAG = "MainActivity"
-private const val ANIMATION_ITERATIONS = 15
-private const val ANIMATION_DELAY_MS = 80L
-private const val MAX_DICE_VALUE = 20
-private const val MIN_DICE_VALUE = 1
+
+
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState:Bundle?){
-        super.onCreate(savedInstanceState)
-        Log.d(TAG,"onCreate: Activity incializando...")
-        Log.d(TAG,"onCreate: Edge-to-Edge habilitado...")
+
         setContent{
             MaterialTheme{
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ){
-                    stateRown()
+                    CharacterScreen()
                 }
             }
         }
-        Log.d(TAG,"onCreate: UI generada Componente establecido correctamente")
     }
 }
 
-//// Component dado
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun DiceRollerScreen(){
-//    var diceValue by rememberSaveable { mutableIntStateOf(MIN_DICE_VALUE)}
-//    var isRolling by remember{mutableStateOf(false)}
-//    var resultMessage by rememberSaveable{mutableStateOf("Tocar el boton para lanzar")}
-//    val coroutineScope = rememberCoroutineScope()
-//
-//    fun rollDice(){
-//        Log.d(TAG,"rollDice: Inicializando el lanzamiento del dado")
-//        coroutineScope.launch{
-//            isRolling = true
-//            resultMessage = "Lanzando..."
-//            Log.d(TAG,"rollDice: Animación inciada")
-//            repeat(ANIMATION_ITERATIONS){
-//                iteration -> diceValue = (MIN_DICE_VALUE..MAX_DICE_VALUE).random()
-//                Log.d(TAG,"rollDice:Iteración ${iteration + 1}/${ANIMATION_ITERATIONS}, valor temporal: $diceValue")
-//                delay(ANIMATION_DELAY_MS)
-//            }
-//            val finalValue =  (MIN_DICE_VALUE..MAX_DICE_VALUE).random()
-//            diceValue = finalValue
-//            Log.d(TAG, "rollDice: resultado final: $finalValue")
-//            isRolling=false
-//            Log.d(TAG,"rollDice: Lanzamiento completo. Mensaje: $resultMessage")
-//        }
-//    }
-//
-//   Scaffold(
-//       topBar={
-//           TopAppBar(
-//               title={
-//                   Text(
-//                       text = "RPG Dice Roller",
-//                       style = MaterialTheme.typography.titleLarge
-//                   )
-//               }
-//           )
-//       }
-//   ) {
-//       paddingValues ->
-//       Column(
-//           modifier = Modifier
-//               .fillMaxSize()
-//               .padding(paddingValues)
-//               .padding(horizontal = 24.dp),
-//           horizontalAlignment = Alignment.CenterHorizontally,
-//           verticalArrangement = Arrangement.Center
-//       ){
-//           Box(
-//               modifier = Modifier
-//                   .size(200.dp),
-//               contentAlignment = Alignment.Center
-//           ){
-//               Text(
-//                   text = diceValue.toString(),
-//                   fontSize = 96.sp,
-//                   fontWeight = FontWeight.Bold,
-//                   color = getDiceValueColor(diceValue,isRolling),
-//                   textAlign = TextAlign.Center
-//               )
-//           }
-//           Spacer(modifier = Modifier.height(24.dp))
-//           Text(
-//               text = resultMessage,
-//               style = MaterialTheme.typography.headlineSmall,
-//               fontWeight = if (diceValue == MAX_DICE_VALUE || diceValue == MIN_DICE_VALUE){
-//                   FontWeight.Bold
-//               }else{
-//                   FontWeight.Normal
-//               },
-//               color = getDiceValueColor(diceValue,isRolling),
-//               textAlign = TextAlign.Center
-//           )
-//           Spacer(modifier = Modifier.height(48.dp))
-//           Button(
-//               onClick = {rollDice()},
-//               enabled = !isRolling,
-//               modifier = Modifier
-//                   .fillMaxWidth()
-//                   .height(56.dp),
-//               colors = ButtonDefaults.buttonColors(
-//                   containerColor = MaterialTheme.colorScheme.primary,
-//                   disabledContainerColor = MaterialTheme.colorScheme.outline
-//               )
-//           ){
-//               Icon(
-//                   imageVector = Icons.Default.Refresh,
-//                   contentDescription = "Lanzar Dado RPG",
-//                   modifier = Modifier.size(24.dp)
-//               )
-//               Spacer(modifier = Modifier.size(8.dp))
-//               Text(
-//                   text = if (isRolling) "Lanzando..."else" Lanzar Dado RPG",
-//                   fontSize = 18.sp,
-//                   fontWeight = FontWeight.Bold
-//               )
-//           }
-//           Spacer(modifier = Modifier.height(16.dp))
-//           Text(
-//               text = "Dado RPG",
-//               style = MaterialTheme.typography.bodyMedium,
-//               color = MaterialTheme.colorScheme.onSurfaceVariant
-//               )
-//       }
-//   }
-//}
 
+// StatRow Componente
+@Composable
+fun StatRow(name:String,value:Int,onRoll:()-> Unit){
 
+       Card{
+           Row(
+               modifier = Modifier
+                   .fillMaxWidth()
+                   .padding(16.dp),
+               verticalAlignment = Alignment.CenterVertically,
+               horizontalArrangement = Arrangement.SpaceBetween
+           ){
+               Text(name,fontSize = 18.sp)
+               Text(value.toString(), fontSize = 18.sp)
+               Button(onClick = onRoll){
+                   Text("Roll")
+               }
+           }
+       }
+
+}
 
 // Character Componente
 @Composable
 fun CharacterScreen(){
-    var vit by remember { mutableStateOf(10)}
+    var str by remember { mutableStateOf(10)}
     var dex by remember { mutableStateOf(10)}
-    var wis by remember { mutableStateOf(10)}
+    var intStat by remember { mutableStateOf(10)}
 
-    val suma = vit + dex + wis
+    val suma = str + dex + intStat
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -224,40 +132,16 @@ fun CharacterScreen(){
             intStat=(1..20).random()
         }
         Spacer(modifier = Modifier.height(24.dp))
-        Text("Total: $total", fontSize=20.sp)
+        Text("Total: $suma", fontSize=20.sp)
         when{
-            total < 30 -> Text(
-                "Re-Roll recomended!"
-                color=color.Red
+            suma < 30 -> Text(
+                "Re-Roll recomended!",
+                color=Color.Red
             )
-            Total>=50 -> Text(
-                "Good"
-                color = color.green
+            suma>=50 -> Text(
+                "Good",
+                color = Color.Green
             )
         }
     }
 }
-
-// Función de colores
-//private fun getDiceValueColor(value:Int,isRolling:Boolean):Color{
-//    return when{
-//        isRolling -> Color(0xFF666666)
-//        value == MAX_DICE_VALUE -> Color(0xFFFFD700)
-//        value == MIN_DICE_VALUE -> Color(0xFFDC143C)
-//        else -> Color(0XFF333333)
-//    }
-//}
-
-// la siguinte función permite ver los componentes sin ejecutar la app
-
-//@Preview(
-//    showBackground = true,
-//    showSystemUi = true,
-//    name = "Dice Roller Preview"
-//)
-//@Composable
-//fun DiceRollerScreenPriview(){
-//    MaterialTheme{
-//        DiceRollerScreen()
-//    }
-//}
