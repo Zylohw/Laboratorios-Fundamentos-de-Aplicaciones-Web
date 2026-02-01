@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ){
-                    DiceRollerScreen()
+                    stateRown()
                 }
             }
         }
@@ -89,6 +89,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// Component dado
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiceRollerScreen(){
@@ -111,11 +112,6 @@ fun DiceRollerScreen(){
             val finalValue =  (MIN_DICE_VALUE..MAX_DICE_VALUE).random()
             diceValue = finalValue
             Log.d(TAG, "rollDice: resultado final: $finalValue")
-            resultMessage = when (finalValue){
-                MAX_DICE_VALUE -> "¡Critical HIT !"
-                MIN_DICE_VALUE -> "¡Critical MISS !"
-                else -> "Resultado: $finalValue"
-            }
             isRolling=false
             Log.d(TAG,"rollDice: Lanzamiento completo. Mensaje: $resultMessage")
         }
@@ -199,6 +195,50 @@ fun DiceRollerScreen(){
                )
        }
    }
+}
+
+
+
+// StatRow Componente
+@Composable
+fun CharacterScreen(){
+    var vit by remember { mutableStateOf(10)}
+    var dex by remember { mutableStateOf(10)}
+    var wis by remember { mutableStateOf(10)}
+
+    val suma = vit + dex + wis
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ){
+        Text("Stadisticas del personaje:", fontSize = 24.sp)
+        StatRow("STR",str){
+            str = (1..20).random()
+        }
+        StatRow("DEX",dex){
+            dex = (1..20).random()
+        }
+        StatRow("INT",intStat){
+            intStat=(1..20).random()
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+        Text("Total: $total", fontSize=20.sp)
+        when{
+            total < 30 -> Text(
+                "Re-Roll recomended!"
+                color=color.Red
+            )
+            Total>=50 -> Text(
+                "Good"
+                color = color.green
+            )
+        }
+    }
+
+
+
 }
 
 // Función de colores
