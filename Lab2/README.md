@@ -1,7 +1,7 @@
 # 📱 Lab 2 – Jetpack Compose
 
 Este repositorio contiene la entrega del **Laboratorio 2**, compuesto por **dos aplicaciones Android** desarrolladas con **Jetpack Compose**.  
-El objetivo principal del laboratorio es practicar **manejo de estado**, **composición** y **efectos secundarios**, sin aplicar aún arquitecturas avanzadas como MVVM.
+El objetivo principal del laboratorio es practicar **manejo de estado**, **composición** y **efectos secundarios**
 
 ---
 
