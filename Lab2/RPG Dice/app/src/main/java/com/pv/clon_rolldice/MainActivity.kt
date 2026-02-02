@@ -69,16 +69,11 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState:Bundle?){
-
+    override fun onCreate(savedInstancesState: Bundle? ){
+        super.onCreate(savedInstancesState)
         setContent{
             MaterialTheme{
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ){
-                    CharacterScreen()
-                }
+                CharacterScreen()
             }
         }
     }
@@ -89,21 +84,21 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun StatRow(name:String,value:Int,onRoll:()-> Unit){
 
-       Card{
-           Row(
-               modifier = Modifier
-                   .fillMaxWidth()
-                   .padding(16.dp),
-               verticalAlignment = Alignment.CenterVertically,
-               horizontalArrangement = Arrangement.SpaceBetween
-           ){
-               Text(name,fontSize = 18.sp)
-               Text(value.toString(), fontSize = 18.sp)
-               Button(onClick = onRoll){
-                   Text("Roll")
-               }
-           }
-       }
+    Card{
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Text(name,fontSize = 18.sp)
+            Text(value.toString(), fontSize = 18.sp)
+            Button(onClick = onRoll){
+                Text("Roll")
+            }
+        }
+    }
 
 }
 
@@ -121,7 +116,7 @@ fun CharacterScreen(){
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ){
-        Text("Stadisticas del personaje:", fontSize = 24.sp)
+        Text("Estadisticas del personaje:", fontSize = 24.sp)
         StatRow("STR",str){
             str = (1..20).random()
         }
@@ -139,9 +134,10 @@ fun CharacterScreen(){
                 color=Color.Red
             )
             suma>=50 -> Text(
+                fontSize = fontSize(14.dp)
                 "Good",
                 color = Color.Green
             )
         }
     }
-}
+}
