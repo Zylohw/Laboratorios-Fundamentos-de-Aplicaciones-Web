@@ -10,11 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.Modifier
-import androidx.compose.draw.clip
-import androidx.compose.graphics.Color
-import androidx.compose.unit.dp
-import androidx.coroutines.delay
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
                     color = Color.Black
                 ){
                     // componente
+                    TrafficLightScreen()
                 }
             }
         }
@@ -51,6 +52,30 @@ fun TrafficLightScreen(){
         }
     }
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        TrafficLightCircle(
+            color = if(currentLight == Light.Red)Color.Red else Color.DarkGray
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TrafficLightCircle(
+            color = if(currentLight == Light.Yellow) Color.Yellow else Color.DarkGray
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        TrafficLightCircle(
+            color = if(currentLight == Light.Green)Color.Green else Color.DarkGray
+        )
+    }
+}
+
+@Composable
+fun TrafficLightCircle(color:Color){
+    Box(
+        modifier = Modifier
+            .size(80.dp)
+            .clip(CircleShape)
+            .background(color)
     )
 }
