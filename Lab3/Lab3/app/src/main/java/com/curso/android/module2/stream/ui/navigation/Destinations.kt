@@ -126,3 +126,8 @@ data object LibraryDestination
 data class PlayerDestination(
     val songId: String
 )
+
+@Serializable
+data class FavoriteDestination(val route:String = "favorites")
+
+
