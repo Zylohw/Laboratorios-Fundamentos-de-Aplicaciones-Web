@@ -40,6 +40,7 @@ import com.curso.android.module2.stream.ui.navigation.HomeDestination
 import com.curso.android.module2.stream.ui.navigation.LibraryDestination
 import com.curso.android.module2.stream.ui.navigation.PlayerDestination
 import com.curso.android.module2.stream.ui.navigation.SearchDestination
+import com.curso.android.module2.stream.ui.navigation.FavoriteDestination
 import com.curso.android.module2.stream.ui.screens.HomeScreen
 import com.curso.android.module2.stream.ui.screens.LibraryScreen
 import com.curso.android.module2.stream.ui.screens.PlayerScreen
@@ -47,6 +48,8 @@ import com.curso.android.module2.stream.ui.screens.SearchScreen
 import com.curso.android.module2.stream.ui.theme.StreamUITheme
 import org.koin.compose.koinInject
 import kotlin.reflect.KClass
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 
 /**
  * ================================================================================
@@ -157,6 +160,13 @@ fun getBottomNavItems(): List<BottomNavItem> {
             label = "Library",
             selectedIcon = { libraryIcon },
             unselectedIcon = { libraryIcon }
+        ),
+        BottomNavItem(
+            route = FavoriteDestination::class,
+            label = "Favorites",
+            selectedIcon = {Icons.Outlined.FavoriteBorder},
+            unselectedIcon={Icons.Outlined.FavoriteBorder}
+
         )
     )
 }
