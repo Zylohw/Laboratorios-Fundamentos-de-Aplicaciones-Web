@@ -128,6 +128,6 @@ data class PlayerDestination(
 )
 
 @Serializable
-data class FavoriteDestination(val route:String = "favorites")
+data object FavoriteDestination
 
 
