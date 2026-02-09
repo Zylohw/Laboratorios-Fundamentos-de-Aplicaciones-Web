@@ -86,4 +86,6 @@ El renderizado de la UI depende completamente del estado actual.
 - Material 3
 
 ---
+# Enlace de Video en youtube (Nota: verlo con una cuenta .galileo.edu)
+- https://youtu.be/GUMerDQYgb4
 
