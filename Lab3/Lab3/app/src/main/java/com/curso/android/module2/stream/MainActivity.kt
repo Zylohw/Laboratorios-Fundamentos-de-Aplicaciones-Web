@@ -50,6 +50,10 @@ import org.koin.compose.koinInject
 import kotlin.reflect.KClass
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import com.curso.android.module2.stream.ui.screens.FavoritesScreen
+import com.curso.android.module2.stream.ui.viewmodel.HomeViewModel
+import org.koin.compose.viewmodel.koinViewModel
+
 
 /**
  * ================================================================================
@@ -345,6 +349,7 @@ fun StreamUIApp() {
                                             HomeDestination::class -> HomeDestination
                                             SearchDestination::class -> SearchDestination
                                             LibraryDestination::class -> LibraryDestination
+                                            FavoriteDestination::class -> FavoriteDestination
                                             else -> HomeDestination
                                         }
                                     ) {
@@ -455,6 +460,19 @@ fun StreamUIApp() {
                         onPlaylistClick = { playlist ->
                             // TODO: Navegar al detalle de la playlist
                             // Por ahora no hace nada
+                        }
+                    )
+                }
+
+                composable<FavoriteDestination> {
+                    val viewModel: HomeViewModel = koinViewModel()
+
+                    FavoritesScreen(
+                        viewModel = viewModel,
+                        onSongClick = { song ->
+                            // Aquí defines lo que pasa al hacer click en la canción
+                            // Por ejemplo: navegar a la screen de detalle
+                            navController.navigate("songDetail/${song.id}")
                         }
                     )
                 }
