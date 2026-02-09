@@ -31,6 +31,12 @@ import com.curso.android.module2.stream.ui.components.SongCoverMock
 import com.curso.android.module2.stream.ui.viewmodel.HomeUiState
 import com.curso.android.module2.stream.ui.viewmodel.HomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+
 
 /**
  * ================================================================================
@@ -124,7 +130,10 @@ fun HomeScreen(
             is HomeUiState.Success -> {
                 HomeContent(
                     categories = state.categories,
-                    onSongClick = onSongClick
+                    onSongClick = onSongClick,
+                    onFavoriteClick = { songId ->
+                        viewModel.toggleFavorite(songId)
+                    }
                 )
             }
 
@@ -173,7 +182,8 @@ private fun ErrorContent(message: String) {
 @Composable
 private fun HomeContent(
     categories: List<Category>,
-    onSongClick: (Song) -> Unit
+    onSongClick: (Song) -> Unit,
+    onFavoriteClick: (String) -> Unit
 ) {
     /**
      * LAZYCOLUMN: Lista Vertical Eficiente
@@ -206,7 +216,9 @@ private fun HomeContent(
         ) { category ->
             CategorySection(
                 category = category,
-                onSongClick = onSongClick
+                onSongClick = onSongClick,
+                onFavoriteClick = onFavoriteClick
+
             )
         }
     }
@@ -221,7 +233,8 @@ private fun HomeContent(
 @Composable
 private fun CategorySection(
     category: Category,
-    onSongClick: (Song) -> Unit
+    onSongClick: (Song) -> Unit,
+    onFavoriteClick:(String)->Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -255,7 +268,8 @@ private fun CategorySection(
             ) { song ->
                 SongCard(
                     song = song,
-                    onClick = { onSongClick(song) }
+                    onClick = { onSongClick(song) },
+                    onFavoriteClick = onFavoriteClick
                 )
             }
         }
@@ -273,7 +287,8 @@ private fun CategorySection(
 @Composable
 private fun SongCard(
     song: Song,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onFavoriteClick:(String)->Unit
 ) {
     Column(
         modifier = Modifier
@@ -310,5 +325,17 @@ private fun SongCard(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.fillMaxWidth()
         )
+        IconButton(
+            onClick = { onFavoriteClick(song.id) }
+        ) {
+            Icon(
+                imageVector =
+                    if (song.isFavorite) Icons.Filled.Favorite
+                    else Icons.Outlined.FavoriteBorder,
+                contentDescription = "Favorite"
+            )
+        }
+
+
     }
 }
