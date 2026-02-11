@@ -245,7 +245,6 @@ fun AmiiboListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { viewModel.updateSearchQuery(it) },
