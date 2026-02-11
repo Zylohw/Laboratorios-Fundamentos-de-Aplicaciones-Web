@@ -251,6 +251,7 @@ class AmiiboViewModel(
     }
     init {
         // Observar cambios en la base de datos
+
         observeDatabaseChanges()
         // Cargar datos iniciales
         refreshAmiibos()
