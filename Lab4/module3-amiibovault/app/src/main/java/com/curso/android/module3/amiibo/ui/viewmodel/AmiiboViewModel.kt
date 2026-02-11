@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.combine
+
 
 /**
  * ============================================================================
@@ -238,8 +240,15 @@ class AmiiboViewModel(
      * Inicialización del ViewModel.
      *
      * init { } se ejecuta cuando se crea el ViewModel.
-     * Aquí configuramos la observación de datos y cargamos inicialmente.
+     * Aquí configuramos la observación de datos y cargamos inicialme
+     * .
      */
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+    }
     init {
         // Observar cambios en la base de datos
         observeDatabaseChanges()
@@ -257,16 +266,23 @@ class AmiiboViewModel(
      */
     private fun observeDatabaseChanges() {
         viewModelScope.launch {
-            amiibosFromDb.collect { amiibos ->
-                // Solo actualiza a Success si hay datos o no estamos en Loading inicial
-                val currentState = _uiState.value
-                if (amiibos.isNotEmpty()) {
-                    _uiState.value = AmiiboUiState.Success(
-                        amiibos = amiibos,
-                        isRefreshing = currentState is AmiiboUiState.Success &&
-                                (currentState as? AmiiboUiState.Success)?.isRefreshing == true
-                    )
+
+            combine(amiibosFromDb, _searchQuery) { amiibos, query ->
+
+                if (query.isBlank()) {
+                    amiibos
+                } else {
+                    amiibos.filter {
+                        it.name.contains(query, ignoreCase = true)
+                    }
                 }
+
+            }.collect { filteredList ->
+
+                _uiState.value = AmiiboUiState.Success(
+                    amiibos = filteredList,
+                    isRefreshing = false
+                )
             }
         }
     }
@@ -474,6 +490,34 @@ class AmiiboViewModel(
             }
         }
     }
+
+
+
+
+    // uso combien para que sea mas reactivo
+
+    private fun observeFilteredData() {
+        viewModelScope.launch {
+            combine(_loadedAmiibos, _searchQuery) { amiibos, query ->
+
+                if (query.isBlank()) {
+                    amiibos
+                } else {
+                    amiibos.filter {
+                        it.name.contains(query, ignoreCase = true)
+                    }
+                }
+
+            }.collect { filteredList ->
+
+                _uiState.value = AmiiboUiState.Success(
+                    amiibos = filteredList,
+                    isRefreshing = false
+                )
+            }
+        }
+    }
+
 }
 
 /**

@@ -269,6 +269,10 @@ class AmiiboRepository(
     fun getAmiiboCount(): Flow<Int> {
         return amiiboDao.getCount()
     }
+
+    fun searchAmiibos(query: String): Flow<List<AmiiboEntity>> {
+        return amiiboDao.searchAmiibos(query)
+    }
 }
 
 /**
