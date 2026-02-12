@@ -394,4 +394,6 @@ Este proyecto es de uso educativo.
 
 ---
 
-> Este proyecto ha sido generado usando Claude Code y adaptado con fines educativos por Adrián Catalán.
+# Video 
+- https://youtu.be/ctVc_EWzdu4
+> NOTA: ver el video con una cuenta .galileo.edu
