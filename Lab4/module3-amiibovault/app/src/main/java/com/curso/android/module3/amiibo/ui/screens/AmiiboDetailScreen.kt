@@ -115,6 +115,7 @@ fun AmiiboDetailScreen(
                 AmiiboDetailContent(
                     amiibo = state.amiibo,
                     modifier = Modifier.padding(paddingValues)
+
                 )
             }
 
