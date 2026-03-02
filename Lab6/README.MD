@@ -1,7 +1,4 @@
 # Laboratorio Módulo 5: Firebase & AI
-**Curso:** Fundamento de Aplicaciones Web  
-**Alumno:** [Tu nombre]  
-**Fecha:** Marzo 2026
 
 ---
 
