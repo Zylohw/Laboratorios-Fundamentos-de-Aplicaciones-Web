@@ -245,7 +245,6 @@ fun MapScreen(
                 userLocation = userLocation,
                 cameraPositionState = cameraPositionState,
                 onSpotClick = { spot -> selectedSpot = spot },
-                onSpotLongClick = { spot -> spotToDelete = spot },
                 onMapClick = { selectedSpot = null }
 
             )
@@ -330,7 +329,6 @@ private fun SpotMap(
     userLocation: LatLng?,
     cameraPositionState: CameraPositionState,
     onSpotClick: (SpotEntity) -> Unit,
-    onSpotLongClick:(SpotEntity)->Unit,
     onMapClick: () -> Unit
 ) {
     /**
