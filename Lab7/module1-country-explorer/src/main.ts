@@ -35,6 +35,7 @@ import { searchCountries, ApiError } from './services/countryApi';
 import { renderCountryList } from './components/CountryCard';
 import { openModal } from './components/CountryModal';
 import { getRequiredElement, showElement, hideElement, onDOMReady, debounce } from './utils/dom';
+import { getFavorites } from './utils/storage';
 
 // =============================================================================
 // ESTADO DE LA APLICACIÓN
@@ -54,6 +55,7 @@ let allCountries: Country[] = [];
 
 // Variable de estado que guarda la región seleccionada
 let selectedRegion = ''
+let showFavorites = false;
 
 // =============================================================================
 // REFERENCIAS A ELEMENTOS DEL DOM
@@ -180,7 +182,15 @@ Función que aplica los filtros
 */
 
 function applyFilters(): void {
+
+
   let filtered = allCountries;
+  // Filtro de favoritos
+  if (showFavorites) {
+    const favorites = getFavorites();
+    filtered = filtered.filter(c => favorites.includes(c.cca3));
+  }
+
    
   if(selectedRegion !== ''){
     filtered = filtered.filter(c => c.region === selectedRegion);
@@ -324,6 +334,20 @@ function setupEventListeners(): void {
   // para el filtro de regiones
   regionFilter.addEventListener('change', (event) => {
     selectedRegion = (event.target as HTMLSelectElement).value;
+    applyFilters();
+  });
+
+
+  // listener de favoritos
+  const favoritesToggle = getRequiredElement<HTMLButtonElement>('#favoritesToggle');
+
+  favoritesToggle.addEventListener('click', () => {
+    showFavorites = !showFavorites;
+    
+    // Cambiar visual del botón según estado
+    favoritesToggle.classList.toggle('bg-red-600', showFavorites);
+    favoritesToggle.classList.toggle('bg-slate-700', !showFavorites);
+    
     applyFilters();
   });
 }
