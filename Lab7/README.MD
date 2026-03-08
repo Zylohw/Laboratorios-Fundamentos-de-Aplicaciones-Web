@@ -38,27 +38,6 @@ Desarrollado como proyecto del **Módulo 1: Fundamentos de Aplicaciones Web** �
 
 ---
 
-## 📁 Estructura del Proyecto
-
-```
-src/
-├── main.ts                  # Punto de entrada, estado y eventos
-├── types/
-│   └── country.ts           # Interfaces TypeScript
-├── services/
-│   └── countryApi.ts        # Llamadas a la REST Countries API
-├── components/
-│   ├── CountryCard.ts       # Tarjeta de país con favorito
-│   └── CountryModal.ts      # Modal de detalle
-└── utils/
-    ├── dom.ts               # Helpers del DOM
-    ├── format.ts            # Formateo de números y texto
-    ├── debounce.ts          # Función debounce
-    └── storage.ts           # Helper de localStorage
-```
-
----
-
 ## ⚙️ Instalación y uso
 
 ```bash
