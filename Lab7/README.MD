@@ -88,7 +88,3 @@ npm run build
 ## 🌐 API utilizada
 
 [REST Countries API](https://restcountries.com) — API pública y gratuita con información de todos los países del mundo.
-
----
-
-*Módulo 1 — Fundamentos de Aplicaciones Web · Galileo University*
