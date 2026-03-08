@@ -49,6 +49,12 @@ let currentState: UiState = { status: 'idle' };
 /** Última búsqueda realizada (para evitar búsquedas duplicadas) */
 let lastSearchQuery = '';
 
+// variable de estado para guardar los paises
+let allCountries: Country[] = [];
+
+// Variable de estado que guarda la región seleccionada
+let selectedRegion = ''
+
 // =============================================================================
 // REFERENCIAS A ELEMENTOS DEL DOM
 // =============================================================================
@@ -65,6 +71,7 @@ let errorMessage: HTMLElement;
 let emptyState: HTMLElement;
 let noResultsState: HTMLElement;
 let countriesList: HTMLElement;
+let regionFilter : HTMLElement
 
 /**
  * Inicializa las referencias a los elementos del DOM.
@@ -80,6 +87,8 @@ function initializeElements(): void {
   emptyState = getRequiredElement<HTMLElement>('#emptyState');
   noResultsState = getRequiredElement<HTMLElement>('#noResultsState');
   countriesList = getRequiredElement<HTMLElement>('#countriesList');
+  regionFilter = getRequiredElement<HTMLElement>('#regionFilter')
+
 }
 
 // =============================================================================
@@ -166,6 +175,31 @@ function render(state: UiState): void {
 // MANEJADORES DE EVENTOS
 // =============================================================================
 
+/*
+Función que aplica los filtros 
+*/
+
+function applyFilters(): void {
+  let filtered = allCountries;
+   
+  if(selectedRegion !== ''){
+    filtered = filtered.filter(c => c.region === selectedRegion);
+  }
+  
+  const query = searchInput.value.trim().toLowerCase()
+  if (query !== ''){
+    filtered = filtered.filter(c => c.name.common.toLowerCase().includes(query))
+  }
+
+
+  // mostrando resultado
+  if(filtered.length === 0){
+    render({status : 'empty'})
+  }else{
+    render ({status:'success', data:filtered})
+  }
+}
+
 /**
  * Maneja la búsqueda de países.
  *
@@ -204,11 +238,14 @@ async function handleSearch(): Promise<void> {
     // Si la Promise se rechaza, el error se captura en el catch.
     // =========================================================================
     const countries = await searchCountries(query);
+    allCountries = countries
+
+    populateRegionFilter(countries);
 
     if (countries.length === 0) {
       render({ status: 'empty' });
     } else {
-      render({ status: 'success', data: countries });
+      applyFilters()
     }
   } catch (error) {
     // Determinamos el mensaje de error apropiado
@@ -283,6 +320,12 @@ function setupEventListeners(): void {
 
   // Botón de reintentar
   retryButton.addEventListener('click', handleRetry);
+
+  // para el filtro de regiones
+  regionFilter.addEventListener('change', (event) => {
+    selectedRegion = (event.target as HTMLSelectElement).value;
+    applyFilters();
+  });
 }
 
 /**
@@ -311,6 +354,19 @@ function initializeApp(): void {
     console.error('Error al inicializar la aplicación:', error);
   }
 }
+
+
+function populateRegionFilter(countries: Country[]): void {
+  const regions = [...new Set(countries.map(c => c.region))].sort();
+  
+  regions.forEach(region => {
+    const option = document.createElement('option');
+    option.value = region;
+    option.textContent = region;
+    regionFilter.appendChild(option);
+  });
+}
+
 
 // =============================================================================
 // ARRANQUE DE LA APLICACIÓN
