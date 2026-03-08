@@ -12,7 +12,7 @@ export function saveFavorites(codes: string[]): void {
   localStorage.setItem(FAVORITE_KEY,JSON.stringify(codes));
 }
 
-expor function toggleFavorites(code: string):boolean{
+export function toggleFavorites(code: string):boolean{
   const favorites = getFavorites();
   const index = favorites.indexOf(code);
 
