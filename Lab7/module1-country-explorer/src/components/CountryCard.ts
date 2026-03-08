@@ -15,6 +15,7 @@
 import type { Country } from '../types/country';
 import { formatNumber, formatCapitals } from '../utils/format';
 import { createElement } from '../utils/dom';
+import { getFavorites,toggleFavorites } from '../utils/storage';
 
 /**
  * Crea una tarjeta de país para mostrar en la lista.
@@ -40,16 +41,18 @@ import { createElement } from '../utils/dom';
  */
 export function createCountryCard(
   country: Country,
-  onClick: (country: Country) => void
+  onClick: (country: Country) => void,
 ): HTMLElement {
   // Creamos el contenedor principal usando nuestra utilidad
   const card = createElement('article', 'country-card', 'cursor-pointer');
+  const isFavorite = getFavorites().includes(country.cca3)
 
   // Agregamos atributos de accesibilidad
   card.setAttribute('role', 'button');
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `Ver detalles de ${country.name.common}`);
 
+  
   // =========================================================================
   // CONSTRUCCIÓN DEL HTML
   // =========================================================================
@@ -69,6 +72,20 @@ export function createCountryCard(
       <span class="absolute top-3 right-3 px-3 py-1 bg-slate-900/80 text-slate-200 text-xs font-medium rounded-full backdrop-blur-sm">
         ${country.region}
       </span>
+
+      <button
+        class="favorite-btn absolute top-3 left-3 p-2 rounded-full bg-slate-900/80 backdrop-blur-sm transition-colors hover:bg-slate-700"
+        aria-label="Agregar a favoritos"
+        data-code="${country.cca3}">
+
+        <svg class="w-4 h-4 ${isFavorite ? 'text-red-500' : 'text-slate-400'}" 
+            fill="${isFavorite ? 'currentColor' : 'none'}" 
+            stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        </svg>
+
+      </button>
     </div>
 
     <div class="p-5">
@@ -112,7 +129,23 @@ export function createCountryCard(
         </svg>
       </div>
     </div>
-  `;
+  `
+  const favBtn = card.querySelector('.favorite-btn');
+  favBtn?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const nowFavorite = toggleFavorites(country.cca3); // usar el nombre correcto
+    
+    const svg = favBtn.querySelector('svg');
+    if (svg) {
+      svg.setAttribute('fill', nowFavorite ? 'currentColor' : 'none');
+      svg.classList.toggle('text-red-500', nowFavorite);
+      svg.classList.toggle('text-slate-400', !nowFavorite);
+    }
+  });
+
+  card.addEventListener('click', () => { onClick(country); });
+  
+  ;
 
   // =========================================================================
   // EVENT LISTENERS
