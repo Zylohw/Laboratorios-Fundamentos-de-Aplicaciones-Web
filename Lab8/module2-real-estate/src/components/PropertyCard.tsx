@@ -65,10 +65,11 @@ export function PropertyCard({ property, onDelete,isInCompare,compareDisabled,on
 
         {/* Badge de tipo de operación */}
         <span
-          className={`absolute top-3 left-3 px-3 py-1 text-xs font-semibold rounded-full ${property.operationType === 'venta'
-            ? 'bg-green-500 text-white'
-            : 'bg-blue-500 text-white'
-            }`}
+          className={`absolute top-3 left-3 px-3 py-1 text-xs font-semibold rounded-full ${
+            property.operationType === 'venta'
+              ? 'bg-green-500 text-white'
+              : 'bg-blue-500 text-white'
+          }`}
         >
           {OPERATION_TYPE_LABELS[property.operationType]}
         </span>
@@ -122,7 +123,6 @@ export function PropertyCard({ property, onDelete,isInCompare,compareDisabled,on
       </CardContent>
 
       <CardFooter className="p-4 pt-0 gap-2">
-
         {/* Botón ver detalles */}
         <Button asChild className="flex-1">
           <Link to={`/property/${property.id}`}>Ver detalles</Link>
@@ -130,15 +130,15 @@ export function PropertyCard({ property, onDelete,isInCompare,compareDisabled,on
 
         {/* Compare Button */}
 
-         {onAddToCompare && (
-    <CompareButton
-      property={property}
-      isInCompare={isInCompare ?? false}
-      disabled={compareDisabled ?? false}
-      onAdd={onAddToCompare}
-      onRemove={onRemoveFromCompare!}
-    />
-  )}
+        {onAddToCompare && (
+          <CompareButton
+            property={property}
+            isInCompare={isInCompare ?? false}
+            disabled={compareDisabled ?? false}
+            onAdd={onAddToCompare}
+            onRemove={onRemoveFromCompare!}
+          />
+        )}
 
         {/* Botón eliminar (si se proporciona callback) */}
         {onDelete && (
