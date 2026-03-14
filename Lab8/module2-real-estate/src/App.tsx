@@ -14,7 +14,7 @@
 import type React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
-import { Home, Building2 } from 'lucide-react';
+import { Home, Building2 ,ChartBarStacked} from 'lucide-react';
 import { HomePage } from '@/pages/HomePage';
 import { NewPropertyPage } from '@/pages/NewPropertyPage';
 import { PropertyDetailPage } from '@/pages/PropertyDetailPage';
@@ -75,6 +75,11 @@ function App(): React.ReactElement {
                 <Home className="h-4 w-4" />
                 Inicio
               </Link>
+
+              <Link to='/compare' className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" >
+              <ChartBarStacked />
+              Comparar Propiedades
+              </Link>
             </nav>
           </div>
         </header>
@@ -114,6 +119,7 @@ function App(): React.ReactElement {
                 </div>
               }
             />
+            {/* Ruta para acceder a la pagina de comparación */}
             <Route path='/compare' element={<ComparePage compareList={compareList} onRemove={removeFromCompare}/>}/>
 
           </Routes>
