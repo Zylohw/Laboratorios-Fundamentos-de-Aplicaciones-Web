@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import type { Property } from '@/types/property';
 import { PROPERTY_TYPE_LABELS, OPERATION_TYPE_LABELS } from '@/types/property';
 import { formatPrice, formatArea, truncateText } from '@/lib/utils';
+import { CompareButton } from './CompareButton';
 
 /**
  * Props del componente PropertyCard.
@@ -25,6 +26,10 @@ import { formatPrice, formatArea, truncateText } from '@/lib/utils';
 interface PropertyCardProps {
   property: Property;
   onDelete?: (id: string) => void;
+  isInCompare?:boolean;
+  compareDisabled ?: boolean;
+  onAddToCompare?:(property:Property) => void;
+  onRemoveFromCompare?: (id: string) => void;
 }
 
 /**
@@ -40,7 +45,7 @@ interface PropertyCardProps {
  * @param property - Datos de la propiedad
  * @param onDelete - Callback opcional para eliminar
  */
-export function PropertyCard({ property, onDelete }: PropertyCardProps): React.ReactElement {
+export function PropertyCard({ property, onDelete,isInCompare,compareDisabled,onAddToCompare,onRemoveFromCompare }: PropertyCardProps): React.ReactElement {
   // Uso de Optional Chaining (?.) y Nullish Coalescing (??)
   // 1. property.images?.[0] -> Si images es null/undefined, devuelve undefined sin lanzar error
   // 2. ?? -> Si lo anterior es null/undefined, usa el placeholder
@@ -117,10 +122,23 @@ export function PropertyCard({ property, onDelete }: PropertyCardProps): React.R
       </CardContent>
 
       <CardFooter className="p-4 pt-0 gap-2">
+
         {/* Botón ver detalles */}
         <Button asChild className="flex-1">
           <Link to={`/property/${property.id}`}>Ver detalles</Link>
         </Button>
+
+        {/* Compare Button */}
+
+         {onAddToCompare && (
+    <CompareButton
+      property={property}
+      isInCompare={isInCompare ?? false}
+      disabled={compareDisabled ?? false}
+      onAdd={onAddToCompare}
+      onRemove={onRemoveFromCompare!}
+    />
+  )}
 
         {/* Botón eliminar (si se proporciona callback) */}
         {onDelete && (
