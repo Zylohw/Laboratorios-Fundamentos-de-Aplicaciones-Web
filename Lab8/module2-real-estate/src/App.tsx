@@ -18,6 +18,10 @@ import { Home, Building2 } from 'lucide-react';
 import { HomePage } from '@/pages/HomePage';
 import { NewPropertyPage } from '@/pages/NewPropertyPage';
 import { PropertyDetailPage } from '@/pages/PropertyDetailPage';
+import { ComparePage } from './pages/ComparePage';
+import type { Property } from './types/property';
+import { useState } from 'react';
+import { property } from 'zod';
 
 /**
  * Componente principal de la aplicación.
@@ -28,6 +32,23 @@ import { PropertyDetailPage } from '@/pages/PropertyDetailPage';
  * - Footer con créditos
  */
 function App(): React.ReactElement {
+  // estado para guardar 3 propiedades en la lista
+  const [compareList,setCompareList] = useState<Property[]>([])
+
+  // estado para ir agregando las propiedades que se quieren comparar
+  const addToCompare = (property: Property) => {
+    if(compareList.length>= 3) return;
+    setCompareList(prev => [...prev,property])
+  }
+
+  // eliminar las propiedades que no se quieren comparar
+  const removeFromCompare = (id:string) =>{
+    setCompareList(prev => prev.filter(p=>p.id !== id))
+  }
+
+  // .some es un metodo que indica si al menos un elemento del array cumple con alguna condición
+  const isInCompare = (id:string) => compareList.some(p => p.id === id)
+
   return (
     <>
       {/* Toaster para notificaciones - fuera del layout para evitar problemas de z-index */}
@@ -67,13 +88,15 @@ function App(): React.ReactElement {
         <main className="flex-1">
           <Routes>
             {/* Página principal - Lista de propiedades */}
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePage compareList={compareList}  onAddToCompare={addToCompare}
+                onRemoveFromCompare={removeFromCompare}
+                isInCompare={isInCompare} />} />
 
             {/* Página para crear nueva propiedad */}
             <Route path="/new" element={<NewPropertyPage />} />
 
             {/* Página de detalle de propiedad */}
-            <Route path="/property/:id" element={<PropertyDetailPage />} />
+            <Route path="/property/:id" element={<PropertyDetailPage compareList={compareList} onRemove={removeFromCompare} />} />
 
             {/* Ruta 404 - Página no encontrada */}
             <Route
@@ -91,6 +114,8 @@ function App(): React.ReactElement {
                 </div>
               }
             />
+            <Route path='/compare' element={<ComparePage compareList={compareList} onRemove={removeFromCompare}/>}/>
+
           </Routes>
         </main>
 
