@@ -34,10 +34,19 @@ import {
   OPERATION_TYPE_LABELS,
 } from '@/types/property';
 
+
+// Interfaz de la pagina 
+interface HomePageProps{
+  compareList: Property[];
+  onAddToCompare: (property:Property) => void;
+  onRemoveFromCompare: (id:string) => void;
+  isInCompare: (id:string) => boolean;
+}
 /**
  * Página principal con lista de propiedades y filtros.
  */
-export function HomePage(): React.ReactElement {
+
+export function HomePage({compareList,onAddToCompare,onRemoveFromCompare,isInCompare}:HomePageProps): React.ReactElement {
   // =========================================================================
   // ESTADO
   // =========================================================================
@@ -243,6 +252,10 @@ export function HomePage(): React.ReactElement {
               key={property.id}
               property={property}
               onDelete={handleDelete}
+               isInCompare={isInCompare(property.id)}
+            compareDisabled={compareList.length >= 3 && !isInCompare(property.id)}
+            onAddToCompare={onAddToCompare}
+            onRemoveFromCompare={onRemoveFromCompare}
             />
           ))}
         </div>
