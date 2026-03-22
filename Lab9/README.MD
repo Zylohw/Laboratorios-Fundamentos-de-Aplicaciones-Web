@@ -27,5 +27,5 @@ El backend corre en el puerto `3002` y se comunica con un frontend React en el p
 
 *Laboratorio 9 · Fundamento de Aplicaciones Web · 2026*
 ## Video
-([Video]https://youtu.be/ae9FAgL94cE)
+[Video](https://youtu.be/ae9FAgL94cE)
 > **Nota**: solo se puede acceder al video mediante una cuenta @galileo.edu
