@@ -213,10 +213,10 @@ export const propertyRepository = {
   async findAllPaginated(
     filters?:PropertyFilters,
     pagination?:PaginationOptions
-  ):Promise<PaginationOptions<Property>>{
+  ):Promise<PaginatedResult<Property>>{
     const where = buildWhereClause(filters);
-    const page = pagination?.page;
-    const limit = pagination?.limit;
+    const page = pagination?.page ?? 1;
+    const limit = pagination?.limit ?? 10;
     const skip = (page-1) * limit;
 
     const [properties, total] = await Promise.all([
@@ -233,6 +233,38 @@ export const propertyRepository = {
       data: properties.map(toProperty),
       total,
     }; 
+  },
+
+  async getStats() {
+    const [groupedStats, total, priceAggregate] = await Promise.all([
+      prisma.property.groupBy({
+        by: ['propertyType'],
+        _count: { id: true },
+        _avg: { price: true },
+      }),
+      prisma.property.count(),
+      prisma.property.aggregate({
+        _min: { price: true },
+        _max: { price: true },
+      }),
+    ]);
+
+    const byType: Record<string, { count: number; avgPrice: number }> = {};
+    for (const stat of groupedStats) {
+      byType[stat.propertyType] = {
+        count: stat._count.id,
+        avgPrice: Math.round(stat._avg.price ?? 0),
+      };
+    }
+
+    return {
+      total,
+      byType,
+      priceRange: {
+        min: priceAggregate._min.price ?? 0,
+        max: priceAggregate._max.price ?? 0,
+      },
+    };
   },
 };
 
