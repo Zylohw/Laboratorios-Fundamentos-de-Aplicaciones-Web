@@ -27,6 +27,7 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 import type { Property, PropertyFilters, CreatePropertyInput, UpdatePropertyInput } from '../types/property.js';
+import { promise } from 'zod';
 
 // =============================================================================
 // CLIENTE PRISMA (Singleton con Adapter para Prisma 7)
@@ -58,6 +59,19 @@ interface PrismaProperty {
   images: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+
+// interfaz para paginación 
+export interface PaginationOptions {
+  page:number;
+  limit: number;
+}
+
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
 }
 
 // =============================================================================
@@ -194,6 +208,31 @@ export const propertyRepository = {
       select: { id: true },
     });
     return property !== null;
+  },
+
+  async findAllPaginated(
+    filters?:PropertyFilters,
+    pagination?:PaginationOptions
+  ):Promise<PaginationOptions<Property>>{
+    const where = buildWhereClause(filters);
+    const page = pagination?.page;
+    const limit = pagination?.limit;
+    const skip = (page-1) * limit;
+
+    const [properties, total] = await Promise.all([
+      prisma.property.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.property.count({ where }),
+    ]);
+
+    return {
+      data: properties.map(toProperty),
+      total,
+    }; 
   },
 };
 
