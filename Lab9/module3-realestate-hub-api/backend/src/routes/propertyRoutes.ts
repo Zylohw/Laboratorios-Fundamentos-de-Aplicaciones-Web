@@ -23,6 +23,7 @@ import {
   createProperty,
   updateProperty,
   deleteProperty,
+  getPropertyStats,
 } from '../controllers/propertyController.js';
 
 const router = Router();
@@ -47,6 +48,10 @@ router.get('/', (req, res) => {
   void getAllProperties(req, res);
 });
 
+router.get('/stats',(req,res) => {
+  void getPropertyStats(req,res)
+})
+
 /**
  * GET /api/properties/:id
  * Obtiene una propiedad específica por su ID.
@@ -65,6 +70,7 @@ router.post('/', (req, res) => {
   void createProperty(req, res);
 });
 
+
 /**
  * PUT /api/properties/:id
  * Actualiza una propiedad existente.
@@ -82,5 +88,8 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   void deleteProperty(req, res);
 });
+
+
+
 
 export default router;
